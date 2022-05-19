@@ -6,6 +6,7 @@
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Components/StaticMeshComponent.h"
+#include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Engine/StaticMesh.h"
 
@@ -16,6 +17,12 @@ AProyectil::AProyectil()
 
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
+	//Creando colison para el proyectil(da fallos al salir del juego)
+	/*CollisionSphere = CreateDefaultSubobject<USphereComponent>(TEXT("Sphere Collision"));
+	CollisionSphere->InitSphereRadius(20.0f);
+	RootComponent = CollisionSphere;*/
+	//
 
 	ProjectileMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ProjectileMesh0"));
 	ProjectileMesh->SetStaticMesh(ProjectileMeshAsset.Object);
@@ -30,7 +37,7 @@ AProyectil::AProyectil()
 	ProjectileMovement->InitialSpeed = 3000.f;
 	ProjectileMovement->MaxSpeed = 3000.f;
 	ProjectileMovement->bRotationFollowsVelocity = true;
-	ProjectileMovement->bShouldBounce = false;
+	ProjectileMovement->bShouldBounce = true;
 	ProjectileMovement->ProjectileGravityScale = 0.f; // No gravity
 
 	// Die after 3 seconds by default
@@ -41,6 +48,8 @@ AProyectil::AProyectil()
 void AProyectil::BeginPlay()
 {
 	Super::BeginPlay();
+
+	//CollisionSphere->OnComponentBeginOverlap.AddDynamic()
 
 }
 

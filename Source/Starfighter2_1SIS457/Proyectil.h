@@ -14,8 +14,8 @@ class STARFIGHTER2_1SIS457_API AProyectil : public AActor
 {
 	GENERATED_BODY()
 	
-		/** Sphere collision component */
-		UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Projectile, meta = (AllowPrivateAccess = "true"))
+	/** Sphere collision component */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Projectile, meta = (AllowPrivateAccess = "true"))
 		UStaticMeshComponent* ProjectileMesh;
 
 	/** Projectile movement component */
@@ -28,7 +28,8 @@ public:
 
 	/** Function to handle the projectile hitting something */
 	UFUNCTION()
-		void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+		void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor,
+			UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 
 	/** Returns ProjectileMesh subobject **/
 	FORCEINLINE UStaticMeshComponent* GetProjectileMesh() const { return ProjectileMesh; }
@@ -43,4 +44,10 @@ protected:
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	//Intento crear colisiones para los proyectiles
+	UPROPERTY(VisibleDefaultsOnly, Category = Projectile)
+		class USphereComponent* CollisionSphere;
+	UPROPERTY(EditAnywhere)
+		float DamageValue = 20.0f;
 };

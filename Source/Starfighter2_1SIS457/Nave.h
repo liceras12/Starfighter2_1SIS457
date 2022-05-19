@@ -27,6 +27,10 @@ public:
 	UPROPERTY(Category = Gameplay, EditAnywhere, BlueprintReadWrite)
 		float Energy;
 
+	/*UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
+		class USoundBase* FireSound;
+	/* Fire a shot in the specified direction 
+	void FireShot(FVector FireDirection);*/
 
 	static const FName MoveForwardBinding;
 	static const FName MoveRightBinding;

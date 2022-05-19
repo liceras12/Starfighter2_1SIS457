@@ -38,7 +38,7 @@ ANaveAereaJugador::ANaveAereaJugador()
 	FireForwardValue = 1.0f;
 	FireRightValue = 0.0f;
 
-	ColaEnteros.Push(10);
+
 
 	/*const FVector MoveDirection = FVector(FireForwardValue, FireRightValue, 0.0f).GetClampedToMaxSize(1.0f);
 
@@ -144,8 +144,13 @@ void ANaveAereaJugador::FireShot(FVector FireDirection)
 		UWorld* const World = GetWorld();
 		if (World != nullptr)
 		{
+			//Haciendo colision
+			FActorSpawnParameters ActorSpawnParams;
+			ActorSpawnParams.SpawnCollisionHandlingOverride =
+				ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
+
 			// spawn the projectile
-			World->SpawnActor<AProyectil>(SpawnLocation, FireRotation);
+			World->SpawnActor<AProyectil>(SpawnLocation, FireRotation, ActorSpawnParams);
 			//UE_LOG(LogTemp, Warning, TEXT("SpawnLocation(X, Y) = %s, %s FireRotation(X, Y) =  s, s"), SpawnLocation.X, SpawnLocation.Y);
 			//UE_LOG(LogTemp, Warning, TEXT("World not nullptr"));
 		}
@@ -155,10 +160,10 @@ void ANaveAereaJugador::FireShot(FVector FireDirection)
 
 		// try and play the sound if specified
 
-	/*	if (FireSound != nullptr)
+	if (FireSound != nullptr)
 		{
 			UGameplayStatics::PlaySoundAtLocation(this, FireSound, GetActorLocation());
-		}*/
+		}
 
 		bCanFire = false;
 		//}
@@ -168,4 +173,35 @@ void ANaveAereaJugador::FireShot(FVector FireDirection)
 void ANaveAereaJugador::ShotTimerExpired()
 {
 	bCanFire = true;
+}
+void ANaveAereaJugador::DropItem()
+{
+	if (ShipInventory->CurrentInventory.Num() == 0)
+	{
+		return;
+	}
+	AInventoryActor* Item = ShipInventory->CurrentInventory.Last();
+	ShipInventory->RemoveFromInventory(Item);
+	//should probably use scaled bounding box
+	FVector ItemOrigin;
+	FVector ItemBounds;
+	Item->GetActorBounds(false, ItemOrigin, ItemBounds);
+	FTransform PutDownLocation = GetTransform() + FTransform(RootComponent->GetForwardVector() * ItemBounds.GetMax());
+	Item->PutDown(PutDownLocation);
+}
+
+void ANaveAereaJugador::TakeItem(AInventoryActor* InventoryItem)
+{
+	InventoryItem->PickUp();
+	ShipInventory->AddToInventory(InventoryItem);
+}
+
+void ANaveAereaJugador::NotifyHit(class UPrimitiveComponent* MyComp, AActor* Other, class UPrimitiveComponent* OtherComp, bool bSelfMoved, FVector HitLocation, FVector HitNormal, FVector NormalImpulse, const FHitResult& Hit)
+{
+	AInventoryActor* InventoryItem = Cast<AInventoryActor>(Other);
+	if (InventoryItem != nullptr)
+	{
+		TakeItem(InventoryItem);
+
+	}
 }

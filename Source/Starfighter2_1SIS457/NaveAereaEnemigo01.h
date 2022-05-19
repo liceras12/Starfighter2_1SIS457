@@ -17,8 +17,10 @@ class STARFIGHTER2_1SIS457_API ANaveAereaEnemigo01 : public ANaveAerea
 public:
 	ANaveAereaEnemigo01();
 
+		virtual void BeginPlay() override;
 		// Begin Actor Interface
 		virtual void Tick(float DeltaSeconds) override;
+		
 
 		void Fire();
 
@@ -36,6 +38,31 @@ public:
 		UPROPERTY(Category = Gameplay, EditAnywhere, BlueprintReadWrite)
 			float FireRate;
 
+		UPROPERTY(EditAnywhere)
+			class UBoxComponent* DamageCollision;
+
+		//AI del enemigo
+		UPROPERTY(VisibleDefaultsOnly, Category = enemy)
+			class UAIPerceptionComponent* AIPerComp;
+
+		UPROPERTY(VisibleDefaultsOnly, Category = enemy)
+			class UAISenseConfig_Sight* SightConfig;
+
+		UFUNCTION()
+			void OnSensed(const TArray<AActor*>& UpdatedActors);
+
+		UPROPERTY(VisibleAnywhere, Category = Movement)
+			FRotator EnemyRotation;
+
+		UPROPERTY(VisibleAnywhere,BlueprintReadOnly, Category = Movement)
+			FRotator CurrentVelocity;
+
+		UPROPERTY(VisibleAnywhere, Category = Movement)
+			FRotator BaseLocation;
+
+		void SetNewRotation(FVector TargetPosition, FVector CurrentPosition);
+
+
 private:
 
 	/* Flag to control firing  */
@@ -43,4 +70,5 @@ private:
 
 	/** Handle for efficient management of ShotTimerExpired timer */
 	FTimerHandle TimerHandle_ShotTimerExpired;
+
 };

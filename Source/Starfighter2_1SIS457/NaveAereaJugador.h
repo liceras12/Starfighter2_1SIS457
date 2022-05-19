@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "NaveAerea.h"
-#include "Cola.h"
+#include "InventoryComponent.h"
 #include "NaveAereaJugador.generated.h"
 
 /**
@@ -47,6 +47,22 @@ public:
 	UPROPERTY(Category = Gameplay, EditAnywhere, BlueprintReadWrite)
 		float FireRate;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
+		class USoundBase* FireSound;
+
+	//Inventario
+	UPROPERTY()
+		UInventoryComponent* ShipInventory;
+
+	UFUNCTION()
+		void TakeItem(AInventoryActor* InventoryItem);
+
+	UFUNCTION()
+		void DropItem();
+
+	UFUNCTION()
+		virtual void NotifyHit(class UPrimitiveComponent* MyComp, AActor* Other, class UPrimitiveComponent* OtherComp, bool bSelfMoved, FVector HitLocation, FVector HitNormal, FVector NormalImpulse, const FHitResult& Hit) override;
+
 
 	/** Returns CameraComponent subobject **/
 	FORCEINLINE class UCameraComponent* GetCameraComponent() const { return CameraComponent; }
@@ -57,7 +73,7 @@ public:
 	//static const FName MoveRightBinding;
 
 	//Cola<class Proyectil*> ColaProyectiles;
-	Cola<int>ColaEnteros;
+	//Cola<int>ColaEnteros;
 
 private:
 

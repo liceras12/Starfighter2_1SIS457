@@ -34,6 +34,17 @@ void ANave::BeginPlay()
 
 }
 
+/*void ANave::FireShot(FVector FireDirection)
+{
+	
+		if (FireSound != nullptr)
+		{
+			UGameplayStatics::PlaySoundAtLocation(this, FireSound, GetActorLocation());
+		}
+
+	
+}*/
+
 // Called every frame
 void ANave::Tick(float DeltaTime)
 {
